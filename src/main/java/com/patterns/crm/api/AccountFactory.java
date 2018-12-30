@@ -61,7 +61,7 @@ public class AccountFactory implements IRecordsFactory {
             acc.setName(resultSet.getString(2));
             acc.setAddress(resultSet.getString(3));
             acc.setPhone(resultSet.getString(4));
-            acc.setDate(resultSet.getDate(5));
+            acc.setDate(resultSet.getTimestamp(5));
 
             list.add(acc);
         }
@@ -78,7 +78,7 @@ public class AccountFactory implements IRecordsFactory {
                 preparedStmt .setString(1, acc.getName());
                 preparedStmt .setString(2, acc.getAddress());
                 preparedStmt .setString(3, acc.getPhone());
-                preparedStmt .setString(4, acc.getDate().toString());
+                preparedStmt .setString(4,acc.getDate().toString());
 
                 preparedStmt.execute();
 

@@ -1,0 +1,9 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+style/menu.css
+style/view.css
+js/localdb.js
+js/controller.js
+js/index.js

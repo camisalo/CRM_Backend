@@ -1,10 +1,10 @@
 package com.patterns.crm.api;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
-import java.sql.Date;
+
+
+
+import java.sql.Timestamp;
 
 
 public class Account implements IRecords {
@@ -12,7 +12,7 @@ public class Account implements IRecords {
     private String name;
     private String address;
     private String phone;
-    private Date date;
+    private Timestamp date;
 
     public Account(){}
 
@@ -48,13 +48,7 @@ public class Account implements IRecords {
         this.phone = phone;
     }
 
-    public Date getDate() {
-        return date;
-    }
+    public Timestamp getDate() { return date; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-
+    public void setDate(Timestamp date) { this.date = date; }
 }
