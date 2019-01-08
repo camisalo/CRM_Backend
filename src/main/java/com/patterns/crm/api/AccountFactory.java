@@ -37,7 +37,7 @@ public class AccountFactory implements IRecordsFactory {
     public void queryById(int id) {
         Connection conn = CentralDB.getDBconnextion();
         try {
-            String query = "SELECT * FROM account WHERE accountid = " + id;
+            String query = "SELECT * FROM account WHERE id = " + id;
 
             Statement statement = conn.createStatement();
             resultSet = statement.executeQuery(query);
@@ -57,7 +57,7 @@ public class AccountFactory implements IRecordsFactory {
     private void addResoultToList() throws SQLException {
         while(resultSet.next()){
             Account acc = new Account();
-            acc.setAccountid(resultSet.getInt(1));
+            acc.setId(resultSet.getInt(1));
             acc.setName(resultSet.getString(2));
             acc.setAddress(resultSet.getString(3));
             acc.setPhone(resultSet.getString(4));

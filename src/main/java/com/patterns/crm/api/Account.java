@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 
 public class Account implements IRecords {
-    private int accountid;
+    private int id;
     private String name;
     private String address;
     private String phone;
@@ -16,12 +16,12 @@ public class Account implements IRecords {
 
     public Account(){}
 
-    public int getAccountid() {
-        return accountid;
+    public int getId() {
+        return id;
     }
 
-    public void setAccountid(int accountid) {
-        this.accountid = accountid;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
