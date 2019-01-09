@@ -1,9 +1,5 @@
 package com.patterns.crm.api;
 
-
-
-
-
 import java.sql.Timestamp;
 
 
@@ -12,7 +8,7 @@ public class Account implements IRecords {
     private String name;
     private String address;
     private String phone;
-    private Timestamp date;
+    private Timestamp date; // potrzeba chyba edycji
 
     public Account(){}
 

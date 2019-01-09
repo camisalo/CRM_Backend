@@ -4,6 +4,7 @@ CACHE:
 index.html
 style/menu.css
 style/view.css
-js/localdb.js
+js/view.js
+js/singleton.js
 js/controller.js
-js/index.js
+js/model.js

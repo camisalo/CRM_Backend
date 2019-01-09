@@ -1,8 +1,6 @@
 package com.patterns.crm.controllers;
 
-import com.patterns.crm.api.Account;
-import com.patterns.crm.api.AccountFactory;
-import com.patterns.crm.api.IRecords;
+import com.patterns.crm.api.*;
 //import org.json.JSONArray;
 //import org.json.JSONException;
 //import org.json.JSONObject;
@@ -10,16 +8,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
 @RequestMapping("/crm")
 public class CRMController {
 
-    @GetMapping(value = "/account", produces = "application/json")
-    public @ResponseBody ResponseEntity<List<IRecords>> getAccounts(){
+    // Account
+    @GetMapping(value = "/{record}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<IRecords>> getAccounts(@PathVariable String record){
 
-        AccountFactory factory = new AccountFactory();
+        IRecordsFactory factory;
+        if (record.equals("account")) factory = new AccountFactory();
+        else if (record.equals("contact")) factory = new ContactFactory();
+//        else if (record.equals("asset")) factory = new AssetFactory();
+//        else if (record.equals("opportunity")) factory = new OpportunityFactory();
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         factory.queryAll();
         List<IRecords> list = factory.getAll();
 
@@ -57,4 +63,17 @@ public class CRMController {
         return new ResponseEntity(HttpStatus.OK);
 
     }
+
+//    // Contact
+//    @GetMapping(value = "/contact", produces = "application/json")
+//    public @ResponseBody ResponseEntity<List<IRecords>> getContacts(){
+//
+//        IRecordsFactory factory = new ContactFactory();
+//        factory.queryAll();
+//        List<IRecords> list = factory.getAll();
+//
+//        if (list.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        else return new ResponseEntity<>(list,HttpStatus.OK);
+//    }
+
 }
