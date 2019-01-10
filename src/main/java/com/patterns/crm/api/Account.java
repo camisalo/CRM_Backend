@@ -8,7 +8,7 @@ public class Account implements IRecords {
     private String name;
     private String address;
     private String phone;
-    private Timestamp date; // potrzeba chyba edycji
+    private Timestamp lastmodified;
 
     public Account(){}
 
@@ -44,7 +44,12 @@ public class Account implements IRecords {
         this.phone = phone;
     }
 
-    public Timestamp getDate() { return date; }
 
-    public void setDate(Timestamp date) { this.date = date; }
+    public Timestamp getLastmodified() {
+        return lastmodified;
+    }
+
+    public void setLastmodified(Timestamp lastmodified) {
+        this.lastmodified = lastmodified;
+    }
 }

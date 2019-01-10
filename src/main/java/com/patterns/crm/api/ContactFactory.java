@@ -2,10 +2,7 @@ package com.patterns.crm.api;
 
 import com.patterns.crm.Helpers.CentralDB;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +65,29 @@ public class ContactFactory implements IRecordsFactory {
             acc.setLastmodified(resultSet.getTimestamp(7));
 
             list.add(acc);
+        }
+    }
+
+    public void insertIntoDB() {
+        String query = "INSERT INTO contact(firstname, lastname, birthdate, email, accountid, lastmodified) VALUES(?,?,?,?,?,?)";
+        for (IRecords a : list) {
+            Contact acc = (Contact) a;
+            Connection conn = CentralDB.getDBconnextion();
+            try {
+
+                PreparedStatement preparedStmt  = conn.prepareStatement(query);
+                preparedStmt .setString(1, acc.getFirstname());
+                preparedStmt .setString(2, acc.getLastname());
+                preparedStmt .setDate(3, acc.getBirthdate());
+                preparedStmt .setString(4, acc.getEmail());
+                preparedStmt .setInt(5, acc.getAccountid());
+                preparedStmt .setTimestamp(6,acc.getLastmodified());
+
+                preparedStmt.execute();
+
+            } catch (Exception c) {
+                c.printStackTrace();
+            }
         }
     }
 }

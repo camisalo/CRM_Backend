@@ -22,8 +22,8 @@ public class CRMController {
         IRecordsFactory factory;
         if (record.equals("account")) factory = new AccountFactory();
         else if (record.equals("contact")) factory = new ContactFactory();
-//        else if (record.equals("asset")) factory = new AssetFactory();
-//        else if (record.equals("opportunity")) factory = new OpportunityFactory();
+        else if (record.equals("asset")) factory = new AssetFactory();
+        else if (record.equals("opportunity")) factory = new OpportunityFactory();
         else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         factory.queryAll();

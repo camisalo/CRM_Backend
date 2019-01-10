@@ -3,25 +3,21 @@ package com.patterns.crm.api;
 import com.patterns.crm.Helpers.CentralDB;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class AccountFactory implements IRecordsFactory {
+public class OpportunityFactory implements IRecordsFactory{
     ResultSet resultSet;
 
-    private List<IRecords> list = new ArrayList<>();
-
-
     @Override
-    public void add(IRecords acc) {
-        list.add(acc);
+    public void add(IRecords record) {
+        list.add(record);
     }
 
     @Override
     public void queryAll() {
         Connection conn = CentralDB.getDBconnextion();
         try {
-            String query = "SELECT * FROM account";
+            String query = "SELECT * FROM opportunity";
 
             Statement statement = conn.createStatement();
             resultSet = statement.executeQuery(query);
@@ -37,7 +33,7 @@ public class AccountFactory implements IRecordsFactory {
     public void queryById(int id) {
         Connection conn = CentralDB.getDBconnextion();
         try {
-            String query = "SELECT * FROM account WHERE id = " + id;
+            String query = "SELECT * FROM opportunity WHERE id = " + id;
 
             Statement statement = conn.createStatement();
             resultSet = statement.executeQuery(query);
@@ -56,29 +52,37 @@ public class AccountFactory implements IRecordsFactory {
 
     private void addResoultToList() throws SQLException {
         while(resultSet.next()){
-            Account acc = new Account();
+            Opportunity acc = new Opportunity();
             acc.setId(resultSet.getInt(1));
             acc.setName(resultSet.getString(2));
-            acc.setAddress(resultSet.getString(3));
-            acc.setPhone(resultSet.getString(4));
-            acc.setLastmodified(resultSet.getTimestamp(5));
+            acc.setAmount(resultSet.getBigDecimal(3));
+            acc.setOwner(resultSet.getInt(4));
+            acc.setOpendate(resultSet.getDate(5));
+            acc.setClosedate(resultSet.getDate(6));
+            acc.setStage(resultSet.getString(7));
+            acc.setAccountid(resultSet.getInt(8));
+            acc.setLastmodified(resultSet.getTimestamp(9));
 
             list.add(acc);
         }
     }
 
     public void insertIntoDB() {
-        String query = "INSERT INTO account(name, address, phone, lastmodified) VALUES(?,?,?,?)";
+        String query = "INSERT INTO opportunity(name, amount, owner, opendate, closedate, stage, accountid, lastmodified) VALUES(?,?,?,?,?,?,?,?)";
         for (IRecords a : list) {
-            Account acc = (Account) a;
+            Opportunity acc = (Opportunity) a;
             Connection conn = CentralDB.getDBconnextion();
             try {
 
                 PreparedStatement preparedStmt  = conn.prepareStatement(query);
                 preparedStmt .setString(1, acc.getName());
-                preparedStmt .setString(2, acc.getAddress());
-                preparedStmt .setString(3, acc.getPhone());
-                preparedStmt .setTimestamp(4,acc.getLastmodified());
+                preparedStmt .setBigDecimal(2, acc.getAmount());
+                preparedStmt .setInt(3, acc.getOwner());
+                preparedStmt .setDate(4,acc.getOpendate());
+                preparedStmt .setDate(5,acc.getClosedate());
+                preparedStmt .setString(6,acc.getStage());
+                preparedStmt .setInt(7,acc.getAccountid());
+                preparedStmt .setTimestamp(8,acc.getLastmodified());
 
                 preparedStmt.execute();
 
