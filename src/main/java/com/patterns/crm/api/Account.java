@@ -9,6 +9,7 @@ public class Account implements IRecords {
     private String address;
     private String phone;
     private Timestamp lastmodified;
+    private String state = "server";
 
     public Account(){}
 
@@ -51,5 +52,13 @@ public class Account implements IRecords {
 
     public void setLastmodified(Timestamp lastmodified) {
         this.lastmodified = lastmodified;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

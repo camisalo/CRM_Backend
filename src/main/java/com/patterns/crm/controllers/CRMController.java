@@ -1,14 +1,14 @@
 package com.patterns.crm.controllers;
 
+//import com.patterns.crm.Helpers.DatabaseAccountSynchronizer;
 import com.patterns.crm.api.*;
-//import org.json.JSONArray;
-//import org.json.JSONException;
-//import org.json.JSONObject;
+import com.patterns.crm.Helpers.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -44,36 +44,22 @@ public class CRMController {
         else return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @PostMapping(value = "/accounts", produces = "application/json")
-    public @ResponseBody ResponseEntity addAccounts(@RequestBody List<Account> acc){
-
-        if (acc.isEmpty()) return new ResponseEntity(HttpStatus.NOT_FOUND);
-        else if (!acc.isEmpty()) return new ResponseEntity(HttpStatus.OK);
-        else return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    }
-
     @PostMapping(value = "/account", produces = "application/json")
-    public @ResponseBody ResponseEntity addAccount(@RequestBody Account acc){
+    public @ResponseBody ResponseEntity addAccount(@RequestBody List<Account> records){
 
+        if (records.isEmpty()) return new ResponseEntity(HttpStatus.NOT_FOUND);
+        List<Account> toinsert = new ArrayList<>();
+        List<Account> toupdate = new ArrayList<>();
+        List<Account> todelete = new ArrayList<>();
+        for (Account acc : records){
+            if (acc.getState().equals("insert")) toinsert.add(acc);
+            else if (acc.getState().equals("update")) toupdate.add(acc);
+            else if (acc.getState().equals("delete")) todelete.add(acc);
+            else System.out.println("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
 
-        AccountFactory accfac = new AccountFactory();
-        accfac.add(acc);
-        accfac.insertIntoDB();
-
+        DatabaseAccountSynchronizer synchronizer = new DatabaseAccountSynchronizer("account", toinsert, toupdate, todelete);
+        synchronizer.execute();
         return new ResponseEntity(HttpStatus.OK);
-
     }
-
-//    // Contact
-//    @GetMapping(value = "/contact", produces = "application/json")
-//    public @ResponseBody ResponseEntity<List<IRecords>> getContacts(){
-//
-//        IRecordsFactory factory = new ContactFactory();
-//        factory.queryAll();
-//        List<IRecords> list = factory.getAll();
-//
-//        if (list.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        else return new ResponseEntity<>(list,HttpStatus.OK);
-//    }
-
 }
