@@ -24,6 +24,7 @@ public class DatabaseAccountSynchronizer {
     public void execute() {
         System.out.println("Tablica: " + delete);
         if (!delete.isEmpty()) deleteFromDb();
+        if (!update.isEmpty()) updateDb();
         if (!insert.isEmpty()) insertIntoDb();
 
     }
@@ -40,10 +41,10 @@ public class DatabaseAccountSynchronizer {
                     preparedStmt.setInt(1, a.getId());
 
                     preparedStmt.addBatch();
-                    i++;
-                    if (i % 1000 == 0 || i == delete.size()) {
-                        preparedStmt.executeBatch(); // Execute every 1000 items.
-                    }
+                }
+                i++;
+                if (i % 1000 == 0 || i == delete.size()) {
+                    preparedStmt.executeBatch(); // Execute every 1000 items.
                 }
             }
         } catch (Exception c) {
@@ -53,7 +54,37 @@ public class DatabaseAccountSynchronizer {
     }
 
     private void updateDb() {
+        String query = "UPDATE account SET name = ?" +
+                "                       , address = ?" +
+                "                       , phone = ?" +
+                "                       , lastmodified = ?" +
+                "WHERE id = ?";
 
+        try {
+            Connection conn = CentralDB.getDBconnextion();
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            int i=0;
+            Account acc;
+            for (Account a : update) {
+                acc = a;
+                if (getRecordById(a.getId())) {
+
+                    preparedStmt.setString(1, acc.getName());
+                    preparedStmt.setString(2, acc.getAddress());
+                    preparedStmt.setString(3, acc.getPhone());
+                    preparedStmt.setTimestamp(4, acc.getLastmodified());
+                    preparedStmt.setInt(5, acc.getId());
+
+                    preparedStmt.addBatch();
+                }
+                i++;
+                if (i % 1000 == 0 || i == update.size()) {
+                    preparedStmt.executeBatch(); // Execute every 1000 items.
+                }
+            }
+        } catch (Exception c) {
+            c.printStackTrace();
+        }
     }
 
     private void insertIntoDb() {

@@ -1,6 +1,7 @@
 package com.patterns.crm.Helpers;
 
 import com.patterns.crm.api.Account;
+import com.patterns.crm.api.Asset;
 import com.patterns.crm.api.Contact;
 
 import java.sql.Connection;
@@ -23,6 +24,7 @@ public class DatabaseContactSynchronizer {
 
     public void execute() {
         if (!delete.isEmpty()) deleteFromDb();
+        if (!update.isEmpty()) updateDb();
         if (!insert.isEmpty()) insertIntoDb();
 
     }
@@ -52,7 +54,41 @@ public class DatabaseContactSynchronizer {
     }
 
     private void updateDb() {
+        String query = "UPDATE contact SET firstname = ?" +
+                "                       , lastname = ?" +
+                "                       , birthdate = ?" +
+                "                       , email = ?" +
+                "                       , accountid = ?" +
+                "                       , lastmodified = ?" +
+                "WHERE id = ?";
 
+        try {
+            Connection conn = CentralDB.getDBconnextion();
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            int i=0;
+            Contact acc;
+            for (Contact a : update) {
+                acc = a;
+                if (getRecordById(a.getId())) {
+
+                    preparedStmt.setString(1, acc.getFirstname());
+                    preparedStmt.setString(2, acc.getLastname());
+                    preparedStmt.setDate(3, acc.getBirthdate());
+                    preparedStmt.setString(4, acc.getEmail());
+                    preparedStmt.setInt(5, acc.getAccountid());
+                    preparedStmt.setTimestamp(6, acc.getLastmodified());
+                    preparedStmt.setInt(7, acc.getId());
+
+                    preparedStmt.addBatch();
+                }
+                i++;
+                if (i % 1000 == 0 || i == update.size()) {
+                    preparedStmt.executeBatch(); // Execute every 1000 items.
+                }
+            }
+        } catch (Exception c) {
+            c.printStackTrace();
+        }
     }
 
     private void insertIntoDb() {
