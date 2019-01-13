@@ -4,10 +4,7 @@ import com.patterns.crm.api.Account;
 import com.patterns.crm.api.Contact;
 import com.patterns.crm.api.Opportunity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class DatabaseOpportunitySynchronizer {
@@ -72,7 +69,7 @@ public class DatabaseOpportunitySynchronizer {
             Opportunity acc;
             for (Opportunity a : update) {
                 acc = a;
-                if (getRecordById(a.getId())) {
+                if (getRecordById(a.getId()) && acc.getLastmodified().after(getTimestampdById(a.getId()))) {
 
                     preparedStmt.setString(1, acc.getName());
                     preparedStmt.setBigDecimal(2, acc.getAmount());
@@ -143,5 +140,23 @@ public class DatabaseOpportunitySynchronizer {
             c.printStackTrace();
         }
         return false;
+    }
+
+    private Timestamp getTimestampdById(Integer id) {
+        Connection conn = CentralDB.getDBconnextion();
+        Opportunity acc = new Opportunity();
+        try {
+            String query = "SELECT * FROM opportunity WHERE id = " + id;
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(query);
+
+            if (result.next()) return result.getTimestamp(9);
+            else return null;
+
+        } catch (Exception c){
+            c.printStackTrace();
+        }
+        return null;
     }
 }

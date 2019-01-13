@@ -1,12 +1,10 @@
 package com.patterns.crm.Helpers;
 
 import com.patterns.crm.api.Account;
+import com.patterns.crm.api.Asset;
 import com.patterns.crm.api.IRecords;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class DatabaseAccountSynchronizer {
@@ -67,7 +65,7 @@ public class DatabaseAccountSynchronizer {
             Account acc;
             for (Account a : update) {
                 acc = a;
-                if (getRecordById(a.getId())) {
+                if (getRecordById(a.getId()) && acc.getLastmodified().after(getTimestampdById(a.getId()))) {
 
                     preparedStmt.setString(1, acc.getName());
                     preparedStmt.setString(2, acc.getAddress());
@@ -130,5 +128,23 @@ public class DatabaseAccountSynchronizer {
             c.printStackTrace();
         }
         return false;
+    }
+
+    private Timestamp getTimestampdById(Integer id) {
+        Connection conn = CentralDB.getDBconnextion();
+        Account acc = new Account();
+        try {
+            String query = "SELECT * FROM account WHERE id = " + id;
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(query);
+
+            if (result.next()) return result.getTimestamp(5);
+            else return null;
+
+        } catch (Exception c){
+            c.printStackTrace();
+        }
+        return null;
     }
 }

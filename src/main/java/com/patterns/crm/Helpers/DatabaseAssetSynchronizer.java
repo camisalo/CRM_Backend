@@ -3,10 +3,7 @@ package com.patterns.crm.Helpers;
 import com.patterns.crm.api.Account;
 import com.patterns.crm.api.Asset;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class DatabaseAssetSynchronizer {
@@ -68,7 +65,7 @@ public class DatabaseAssetSynchronizer {
             Asset acc;
             for (Asset a : update) {
                 acc = a;
-                if (getRecordById(a.getId())) {
+                if (getRecordById(a.getId()) && acc.getLastmodified().after(getTimestampdById(a.getId()))) {
 
                     preparedStmt.setString(1, acc.getName());
                     preparedStmt.setString(2, acc.getDescription());
@@ -133,6 +130,24 @@ public class DatabaseAssetSynchronizer {
             c.printStackTrace();
         }
         return false;
+    }
+
+    private Timestamp getTimestampdById(Integer id) {
+        Connection conn = CentralDB.getDBconnextion();
+        Asset acc = new Asset();
+        try {
+            String query = "SELECT * FROM asset WHERE id = " + id;
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(query);
+
+            if (result.next()) return result.getTimestamp(6);
+            else return null;
+
+        } catch (Exception c){
+            c.printStackTrace();
+        }
+        return null;
     }
 
 }

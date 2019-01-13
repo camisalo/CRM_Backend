@@ -4,10 +4,7 @@ import com.patterns.crm.api.Account;
 import com.patterns.crm.api.Asset;
 import com.patterns.crm.api.Contact;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class DatabaseContactSynchronizer {
@@ -69,7 +66,7 @@ public class DatabaseContactSynchronizer {
             Contact acc;
             for (Contact a : update) {
                 acc = a;
-                if (getRecordById(a.getId())) {
+                if (getRecordById(a.getId()) && acc.getLastmodified().after(getTimestampdById(a.getId()))) {
 
                     preparedStmt.setString(1, acc.getFirstname());
                     preparedStmt.setString(2, acc.getLastname());
@@ -135,5 +132,23 @@ public class DatabaseContactSynchronizer {
             c.printStackTrace();
         }
         return false;
+    }
+
+    private Timestamp getTimestampdById(Integer id) {
+        Connection conn = CentralDB.getDBconnextion();
+        Contact acc = new Contact();
+        try {
+            String query = "SELECT * FROM contact WHERE id = " + id;
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(query);
+
+            if (result.next()) return result.getTimestamp(7);
+            else return null;
+
+        } catch (Exception c){
+            c.printStackTrace();
+        }
+        return null;
     }
 }
