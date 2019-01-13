@@ -14,6 +14,7 @@ public class Opportunity implements IRecords{
     private String stage;
     private int accountid;
     private Timestamp lastmodified;
+    private String state = "server";
 
     public int getId() {
         return id;
@@ -85,5 +86,13 @@ public class Opportunity implements IRecords{
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

@@ -11,6 +11,7 @@ public class Contact implements IRecords {
     private String email;
     private int accountid;
     private Timestamp lastmodified;
+    private String state = "server";
 
     public int getId() {
         return id;
@@ -66,5 +67,13 @@ public class Contact implements IRecords {
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

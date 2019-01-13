@@ -10,6 +10,8 @@ public class Asset implements IRecords{
     private BigDecimal price;
     private int accountid;
     private Timestamp lastmodified;
+    private String state = "server";
+
 
     public int getId() {
         return id;
@@ -57,5 +59,13 @@ public class Asset implements IRecords{
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

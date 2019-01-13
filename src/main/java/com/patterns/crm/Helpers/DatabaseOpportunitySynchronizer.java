@@ -1,7 +1,7 @@
 package com.patterns.crm.Helpers;
 
 import com.patterns.crm.api.Account;
-import com.patterns.crm.api.IRecords;
+import com.patterns.crm.api.Opportunity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,13 +9,13 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
-public class DatabaseAccountSynchronizer {
-    private List<Account> insert;
-    private List<Account> update;
-    private List<Account> delete;
+public class DatabaseOpportunitySynchronizer {
+    private List<Opportunity> insert;
+    private List<Opportunity> update;
+    private List<Opportunity> delete;
 
 
-    public DatabaseAccountSynchronizer(List<Account> insert, List<Account> update, List<Account> delete) {
+    public DatabaseOpportunitySynchronizer(List<Opportunity> insert, List<Opportunity> update, List<Opportunity> delete) {
         this.insert = insert;
         this.update = update;
         this.delete = delete;
@@ -29,13 +29,13 @@ public class DatabaseAccountSynchronizer {
     }
 
     private void deleteFromDb() {
-        String query = "DELETE FROM account WHERE id = ?";
+        String query = "DELETE FROM opportunity WHERE id = ?";
         System.out.println("USUWANIE: " + delete);
         try {
             Connection conn = CentralDB.getDBconnextion();
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             int i=0;
-            for (Account a : delete) {
+            for (Opportunity a : delete) {
                 if (getRecordById(a.getId())) {
                     preparedStmt.setInt(1, a.getId());
 
@@ -57,20 +57,24 @@ public class DatabaseAccountSynchronizer {
     }
 
     private void insertIntoDb() {
-        String query = "INSERT INTO account(name, address, phone, lastmodified) VALUES(?,?,?,?)";
+        String query = "INSERT INTO opportunity (name, amount, owner, opendate, closedate, stage, accountid,lastmodified) VALUES(?,?,?,?,?,?,?,?)";
 
         try {
             Connection conn = CentralDB.getDBconnextion();
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             int i=0;
-            Account acc;
-            for (Account a : insert) {
+            Opportunity acc;
+            for (Opportunity a : insert) {
                 acc = a;
 
                 preparedStmt.setString(1, acc.getName());
-                preparedStmt.setString(2, acc.getAddress());
-                preparedStmt.setString(3, acc.getPhone());
-                preparedStmt.setTimestamp(4, acc.getLastmodified());
+                preparedStmt.setBigDecimal(2, acc.getAmount());
+                preparedStmt.setInt(3, acc.getOwner());
+                preparedStmt.setDate(4, acc.getOpendate());
+                preparedStmt.setDate(5, acc.getClosedate());
+                preparedStmt.setString(6, acc.getStage());
+                preparedStmt.setInt(7, acc.getAccountid());
+                preparedStmt.setTimestamp(8, acc.getLastmodified());
 
                 preparedStmt.addBatch();
                 i++;
@@ -85,9 +89,9 @@ public class DatabaseAccountSynchronizer {
 
     private boolean getRecordById(Integer id) {
         Connection conn = CentralDB.getDBconnextion();
-        Account acc = new Account();
+        Opportunity acc = new Opportunity();
         try {
-            String query = "SELECT * FROM account WHERE id = " + id;
+            String query = "SELECT * FROM opportunity WHERE id = " + id;
 
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(query);
