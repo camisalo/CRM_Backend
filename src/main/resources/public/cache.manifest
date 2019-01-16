@@ -1,5 +1,16 @@
 CACHE MANIFEST
 
+FALLBACK:
+index.html
+style/menu.css
+style/view.css
+js/view.js
+js/singleton.js
+js/controller.js
+js/model.js
+js/builder/supervisor.js
+js/builder/TableBuilder.js
+
 CACHE:
 index.html
 style/menu.css
@@ -8,3 +19,11 @@ js/view.js
 js/singleton.js
 js/controller.js
 js/model.js
+js/builder/supervisor.js
+js/builder/TableBuilder.js
+
+NETWORK:
+http://localhost:8080/crm/account
+http://localhost:8080/crm/contact
+http://localhost:8080/crm/asset
+http://localhost:8080/crm/opportunity
