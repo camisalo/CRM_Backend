@@ -19,7 +19,6 @@ public class DatabaseAssetSynchronizer {
     }
 
     public void execute() {
-        System.out.println("Tablica: " + delete);
         if (!delete.isEmpty()) deleteFromDb();
         if (!update.isEmpty()) updateDb();
         if (!insert.isEmpty()) insertIntoDb();
@@ -28,7 +27,6 @@ public class DatabaseAssetSynchronizer {
 
     private void deleteFromDb() {
         String query = "DELETE FROM asset WHERE id = ?";
-        System.out.println("USUWANIE: " + delete);
         try {
             Connection conn = CentralDB.getDBconnextion();
             PreparedStatement preparedStmt = conn.prepareStatement(query);

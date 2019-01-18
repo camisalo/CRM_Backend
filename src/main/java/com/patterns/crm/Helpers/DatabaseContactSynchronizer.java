@@ -28,7 +28,6 @@ public class DatabaseContactSynchronizer {
 
     private void deleteFromDb() {
         String query = "DELETE FROM contact WHERE id = ?";
-        System.out.println("USUWANIE: " + delete);
         try {
             Connection conn = CentralDB.getDBconnextion();
             PreparedStatement preparedStmt = conn.prepareStatement(query);

@@ -6,18 +6,21 @@ import java.sql.SQLException;
 
 import static java.lang.Class.forName;
 
-public class CentralDB {    // Singleton --> wzorzec projektowy
+public final class CentralDB {    // Singleton --> wzorzec projektowy
     static Connection conn = null;
+    public static CentralDB db;
 
     private CentralDB() {
 
     }
 
-    public static Connection getDBconnextion() {
+    private static void connect() {
         try {
             if (conn == null){
                 Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-                conn = DriverManager.getConnection("jdbc:mysql://localhost/crm?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","haslo");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost/crm?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                        "root",
+                        "haslo");
             }
 
         } catch (SQLException ex) {
@@ -26,6 +29,18 @@ public class CentralDB {    // Singleton --> wzorzec projektowy
             System.out.println("VendorError: " + ex.getErrorCode());
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public static synchronized Connection getDBconnextion() {
+        try {
+            if ( conn == null ) {
+                connect();
+            } else if (conn.isClosed()) {
+                connect();
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
         }
         return conn;
     }

@@ -20,7 +20,6 @@ public class DatabaseAccountSynchronizer {
     }
 
     public void execute() {
-        System.out.println("Tablica: " + delete);
         if (!delete.isEmpty()) deleteFromDb();
         if (!update.isEmpty()) updateDb();
         if (!insert.isEmpty()) insertIntoDb();
@@ -29,7 +28,6 @@ public class DatabaseAccountSynchronizer {
 
     private void deleteFromDb() {
         String query = "DELETE FROM account WHERE id = ?";
-        System.out.println("USUWANIE: " + delete);
         try {
             Connection conn = CentralDB.getDBconnextion();
             PreparedStatement preparedStmt = conn.prepareStatement(query);

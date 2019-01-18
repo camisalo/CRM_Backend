@@ -50,7 +50,7 @@ public class CRMController {
         List<Account> toupdate = new ArrayList<>();
         List<Account> todelete = new ArrayList<>();
         for (Account acc : records){
-            System.out.println(acc.getId());
+//            System.out.println(acc.getId());
             if (acc.getState().equals("insert")) toinsert.add(acc);
             else if (acc.getState().equals("update")) toupdate.add(acc);
             else if (acc.getState().equals("delete")) todelete.add(acc);
@@ -67,7 +67,7 @@ public class CRMController {
         List<Contact> toupdate = new ArrayList<>();
         List<Contact> todelete = new ArrayList<>();
         for (Contact con : records){
-            System.out.println(con.getId());
+//            System.out.println(con.getId());
             if (con.getState().equals("insert")) toinsert.add(con);
             else if (con.getState().equals("update")) toupdate.add(con);
             else if (con.getState().equals("delete")) todelete.add(con);
@@ -84,7 +84,7 @@ public class CRMController {
         List<Asset> toupdate = new ArrayList<>();
         List<Asset> todelete = new ArrayList<>();
         for (Asset acc : records){
-            System.out.println(acc.getId());
+//            System.out.println(acc.getId());
             if (acc.getState().equals("insert")) toinsert.add(acc);
             else if (acc.getState().equals("update")) toupdate.add(acc);
             else if (acc.getState().equals("delete")) todelete.add(acc);
@@ -101,7 +101,7 @@ public class CRMController {
         List<Opportunity> toupdate = new ArrayList<>();
         List<Opportunity> todelete = new ArrayList<>();
         for (Opportunity acc : records){
-            System.out.println(acc.getId());
+//            System.out.println(acc.getId());
             if (acc.getState().equals("insert")) toinsert.add(acc);
             else if (acc.getState().equals("update")) toupdate.add(acc);
             else if (acc.getState().equals("delete")) todelete.add(acc);
